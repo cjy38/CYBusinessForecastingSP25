@@ -1,4 +1,3 @@
 # CYBusinessForecastingSP25
-Business Forecasting Class MTH 10:20AM
-
-To submit class assignments
+Repository for Knitting and Github Class Assignments
+- Business Forecasting Class MTH 10:20AM
