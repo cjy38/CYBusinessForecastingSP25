@@ -1,0 +1,30 @@
+---
+title: "Get your Time Series Data"
+author: "Corey Yang"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# Get Your Time Series Data
+
+## Data Description
+
+```{r}
+# The data contains the total value of shipments of U.S. automobile manufacturing from January 2019 to December 2023. The period is monthly throughout the five years. The value is measured in millions of dollars. Shipments are measured based on net selling value and do not include freight charges and excise taxes.  
+```
+
+## Data Collection Methodology
+
+```{r}
+# The data is collected by the United States Census Bureau using their survey called The Manufacturers’ Shipments, Inventories, and Orders survey or M3 on a monthly basis. They estimate numbers for the current month, and revise the estimate in future months once they obtain data.
+```
+
+## Why does this data set intrigue you?
+
+```{r}
+# This data set showcases past trends in automobile manufacturing, which will likely see some degree of change as policies regarding automobile taxation will likely be put into effect. Deviations will showcase the effects of the new policies.
+```
+
+```{r include=FALSE}
+# https://www.census.gov/econ/currentdata/?programCode=M3&startYear=2019&endYear=2023&categories[]=36A&dataType=VS&geoLevel=US&adjusted=0&notAdjusted=1&errorData=0#table-results
+```
