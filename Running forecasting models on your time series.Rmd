@@ -1,0 +1,90 @@
+---
+title: "Running forecasting models on your time series"
+author: "Corey Yang"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r include=FALSE}
+library(fpp)
+library(fpp2)
+
+tsAuto <- ts(read.csv("~/RStudio/Time Series Modeling for Business/Assignment 4/Automobile Manufacturing U.S. Total Modified.csv", row.names=1), frequency = 12, start = c(2019, 1), end = c(2023,12))
+dim(tsAuto) <- NULL
+dimnames(tsAuto) <- NULL
+
+acfAuto <- coredata(tsAuto)
+meanAuto <- meanf(tsAuto,6)
+naiveAuto <- naive(tsAuto,6)
+rwfAuto <- rwf(tsAuto,6, drift=TRUE)
+snAuto <- snaive(tsAuto,6)
+maAuto <- ma(tsAuto,order=6)
+etsAuto <- ets(tsAuto, model = "AAA")
+holtAuto <- HoltWinters(tsAuto,beta=FALSE,gamma=FALSE)
+fEtsAuto <- forecast(etsAuto, h=6)
+```
+
+## Time Series
+
+```{r}
+plot(tsAuto)
+
+acf(acfAuto)
+
+# Mean
+plot(meanAuto)
+
+# Naive
+plot(naiveAuto)
+
+# Random Walk
+plot(rwfAuto)
+
+# Seasonal Naive
+plot(snAuto)
+
+# Moving Average
+plot(maAuto)
+
+# Holt-Winters
+plot(holtAuto)
+
+# Decomposition
+plot(etsAuto)
+
+# Forecast
+plot(fEtsAuto)
+```
+
+## Discussion
+
+```{r}
+# The data taken by the U.S. Census Bureau on a monthly basis regarding the value of shipments in the automobile manufacturing industry from 2019 to 2023. The data has a large dip in 2020 due to the COVID-19 pandemic, straying from the seasonal trend which only returned to normal after the end of 2021. The only significant lag is at 1. The mean forecast shows the average value, ignoring the seasonal nature of the data. The naive and random walk models builds upon the mean model by showing how forecasts further into the future will have more noise. The seasonal naive model accounts for the seasonality of the data. The Holt-Winters filtering model shows a general increase in shipping value for the industry through the years after the pandemic.
+```
+
+## One Chart
+
+```{r}
+plot(meanAuto)
+lines(naiveAuto$mean,col="red")
+lines(rwfAuto$mean,col="green")
+lines(snAuto$mean,col="black")
+lines(maAuto,col="pink")
+```
+
+## Accuracy
+
+```{r}
+accuracy(meanAuto)
+accuracy(naiveAuto)
+accuracy(rwfAuto)
+accuracy(snAuto)
+accuracy(fEtsAuto)
+```
+
+## Best Model
+
+```{r}
+# Using the mean absolute error is the best for comparing models as it is the most effective when there are outliers such as the ones present in 2020. According to this metric, the exponential smoothing state space model would be the most accurate, having an MAE significantly below the other models. 
+```
+
