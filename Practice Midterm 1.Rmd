@@ -1,0 +1,82 @@
+---
+title: "Practice Midterm 1"
+author: "Corey Yang"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r include=FALSE}
+library(fpp2)
+```
+
+# Practice Midterm 1
+## Plot and Inference
+
+```{r}
+# The time series plot shows the quarterly arrivals to Australia from the United States during Q1 of 1981 to Q3 of 2012. The time series shows a general growth from 1981 to 2000 where it plateaus. There is a spike during that time from 1986 to 1989.
+
+usArrivals <- arrivals[,4]
+plot(usArrivals)
+```
+
+## Central Tendency
+
+```{r}
+# The time series is normally distributed, with a range from 23.72 to 136.09 and an IQR range from 63.95 to 108.98.
+
+summary(usArrivals)
+boxplot(usArrivals)
+```
+
+## Decomposition
+
+```{r}
+# The time series is seasonal. The decomposition is additive. The seasonal indices in each quarter in order are 6.784749 -7.969292 -4.717247  5.901790. It is generally the highest in quarters 1 and 4, since that is during the holidays, when most people visit family or go on vacation.
+
+decompArrivals <- decompose(usArrivals)
+plot(decompArrivals)
+
+
+# Seasonality has large fluctuations in the value of the time series.
+
+plot(usArrivals)
+lines(seasadj(decompArrivals), col = "red")
+```
+
+## Naive Method
+
+```{r}
+naiveArrivals <- naive(usArrivals, 4)
+naiveArrivals
+plot(naiveArrivals)
+
+# The plot of residuals show that the errors are similar throughout the forecast.
+
+plot(naiveArrivals$residuals)
+
+
+# The histogram of residuals show that the errors are slightly right skewed
+
+hist(naiveArrivals$residuals)
+
+
+# The plot shows that the forecast is more accurate at clusters around the predicted 105 arrivals, 65 arrivals, and 35 arrivals.
+
+plot(naiveArrivals$fitted,naiveArrivals$residuals)
+
+
+# The plot shows that the forecast has lower residuals around the actual 110 arrivals, 65 arrivals, and 35 arrivals.
+
+plot(naiveArrivals$x,naiveArrivals$residuals)
+
+
+# It shows that lags at multiples of 2 are significant.
+
+Acf(naiveArrivals$residuals)
+
+
+# The accuracy of the naive forecast is not the best, with the MAPE showing 11.82787. It predicts the results for Q3 2013 as 106.54, with a 80% confidence range from 74.46813 to 138.6119. 
+
+accuracy(naiveArrivals)
+```
+
