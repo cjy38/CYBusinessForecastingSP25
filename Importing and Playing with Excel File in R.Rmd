@@ -1,0 +1,153 @@
+---
+title: "Importing and Playing with Excel File in R"
+author: "cjy38@scarletmail.rutgers.edu"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r include = FALSE}
+# Importing CSV to RStudio
+Survey_Ans <- read.csv("~/Rstudio/Time Series Modeling for Business/Assignment 2/Typical_Employee_Survey_Data.csv",header = FALSE)
+
+# Add Header Row
+names(Survey_Ans) <- c("Age","Gender","Satisf","Character","Years","Promote","Impact","Budg","Pride","Loyal","Relate")
+
+# 5-point Summary
+Age <- fivenum(Survey_Ans$Age)
+Gender <- fivenum(Survey_Ans$Gender)
+Satisfaction <- fivenum(Survey_Ans$Satisf)
+Character <- fivenum(Survey_Ans$Character)
+Tenure <- fivenum(Survey_Ans$Years)
+Promotion <- fivenum(Survey_Ans$Promote)
+Impact <- fivenum(Survey_Ans$Impact)
+Budget <- fivenum(Survey_Ans$Budg)
+Pride <- fivenum(Survey_Ans$Pride)
+Loyalty <- fivenum(Survey_Ans$Loyal)
+Relation <- fivenum(Survey_Ans$Relate)
+fpsummary <- data.frame(Age,Gender,Satisfaction,Character,Tenure,Promotion,Impact,Budget,Pride,Loyalty,Relation)
+row.names(fpsummary) <- c("Min","25%","Median","75%","Max")
+```
+
+## Employee Satisfaction Survey Results
+
+### 5-point Summary
+
+```{r echo = FALSE}
+t(fpsummary)
+```
+
+### Box Plots
+
+```{r}
+# Age
+boxplot(Age)
+
+# Gender
+boxplot(Gender)
+
+# Satisfaction
+boxplot(Satisfaction)
+
+#Character
+boxplot(Character)
+
+#Tenure
+boxplot(Tenure)
+
+#Promotion
+boxplot(Promotion)
+
+#Impact
+boxplot(Impact)
+
+#Budget
+boxplot(Budget)
+
+#Pride
+boxplot(Pride)
+
+#Loyalty
+boxplot(Loyalty)
+
+#Relation
+boxplot(Relation)
+```
+
+```{r echo = FALSE}
+# General Factors
+Survey_Ans$Satisf <- as.factor(Survey_Ans$Satisf)
+Survey_Ans$Promote <- as.factor(Survey_Ans$Promote)
+Survey_Ans$Impact <- as.factor(Survey_Ans$Impact)
+Survey_Ans$Pride <- as.factor(Survey_Ans$Pride)
+Survey_Ans$Loyal <- as.factor(Survey_Ans$Loyal)
+Survey_Ans$Relate <- as.factor(Survey_Ans$Relate)
+
+# Change Gender to Factors "M" and "F"
+Survey_Ans[Survey_Ans$Gender == "1",2] <- c("M")
+Survey_Ans[Survey_Ans$Gender == "2",2] <- c("F")
+Survey_Ans$Gender <- as.factor(Survey_Ans$Gender)
+
+# Change Characteristics to Factors "High Income", "Job Safety", "Flexibility", "Opportunity", and "Enjoyment"
+Survey_Ans[Survey_Ans$Character == "1",4] <- c("High Income")
+Survey_Ans[Survey_Ans$Character == "2",4] <- c("Job Safety")
+Survey_Ans[Survey_Ans$Character == "3",4] <- c("Flexibility")
+Survey_Ans[Survey_Ans$Character == "4",4] <- c("Opportunity")
+Survey_Ans[Survey_Ans$Character == "5",4] <- c("Enjoyment")
+Survey_Ans$Character <- as.factor(Survey_Ans$Character)
+
+# Change Budget to Factors "Yes" and "No"
+Survey_Ans[Survey_Ans$Budg == "1",8] <- c("Yes")
+Survey_Ans[Survey_Ans$Budg == "2",8] <- c("No")
+Survey_Ans$Budg <- as.factor(Survey_Ans$Budg)
+```
+
+### Visuals
+
+```{r}
+# Age: The box plot shows that the majority of employees are between their mid-thirties to mid-forties with some outliers.
+boxplot(Age)
+
+# Gender: The bar graphs show that the majority of employees are male.
+plot(Survey_Ans$Gender)
+
+# Satisfaction: The bar graphs show a skew towards high satisfaction.
+plot(Survey_Ans$Satisf)
+
+# Characteristic: The bar graphs show that a majority of employees consider their enjoyment to be the most important job characteristic.
+plot(Survey_Ans$Character)
+
+# Tenure: The box plot shows that a majority of employees have been with the company for around 10 years with some outliers.
+boxplot(Tenure)
+
+# Promotion: The bar graphs show a general trend that employees are unconfident in potential promotions.
+plot(Survey_Ans$Promote)
+
+# Impact: The bar graphs show that employees feel they have a moderate say in the company's decision making.
+plot(Survey_Ans$Impact)
+
+# Budget: The bar graphs show that half of all employees participate in budget decisions.
+plot(Survey_Ans$Budg)
+
+# Pride: The bar graphs show a skew towards employees being proud of the company.
+plot(Survey_Ans$Pride)
+
+# Loyalty: The bar graphs show that many employees are willing to leave the company for more pay.
+plot(Survey_Ans$Loyal)
+
+# Relations: The bar graphs show a skew towards employees having good relationships with their peers.
+plot(Survey_Ans$Relate)
+```
+
+```{r warning = FALSE}
+# Small correlation between age and tenure shows that the older the employee, the longer they likely would have been with the company.
+scatter.smooth(Survey_Ans$Age,Survey_Ans$Years)
+
+# Small correlation between loyalty and relationships show that the better the relationship with peers, the less likely the employee will switch jobs due to better pay.
+scatter.smooth(Survey_Ans$Loyal,Survey_Ans$Relate)
+
+# Small correlation between satisfaction and promotion prospects showing that employees who doubt their promotion prospects are more likely to be unsatisfied.
+scatter.smooth(Survey_Ans$Satisf,Survey_Ans$Promote)
+
+# Correlation between the number of years working at the company and the employee's promotion prospects. Since the majority of the employees are with the company for 10 years or less, the sharp increase is where the focus should be rather than the older employees which are outliers.
+scatter.smooth(Survey_Ans$Years,Survey_Ans$Promote)
+```
