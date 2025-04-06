@@ -1,0 +1,45 @@
+---
+title: "ARIMA"
+author: "Corey Yang"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r include=FALSE}
+library(fpp)
+library(fpp2)
+
+tsAuto <- ts(read.csv("~/RStudio/Time Series Modeling for Business/Assignment 5/Automobile Manufacturing U.S. Total Modified-225.csv", row.names=1), frequency = 12, start = c(2021, 1), end = c(2025,1))
+```
+
+## ARIMA Discussion
+
+```{r}
+ARIMAAuto <- auto.arima(tsAuto, trace=TRUE, stepwise = FALSE)
+ARIMAAuto
+
+# The best ARIMA model is (4,1,0)(0,1,0), meaning the model uses the past 4 values to forecast and differenced once both non-seasonally and seasonally to make it stationary. The relationship with the 4 lags are all negative. The variance of the residuals is high at 426014.
+```
+
+## Residual Analysis
+
+```{r}
+Acf(ARIMAAuto$residuals)
+Box.test(residuals(ARIMAAuto), lag=20, type="Ljung")
+plot.ts(residuals(ARIMAAuto))
+hist(ARIMAAuto$residuals)
+tsdiag(ARIMAAuto)
+```
+
+## Forecast
+
+```{r}
+plot(forecast(ARIMAAuto,h=5,level=c(99.5)))
+```
+
+## Accuracy
+
+```{r}
+accuracy(ARIMAAuto)
+```
+
